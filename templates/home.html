@@ -1,0 +1,39 @@
+<!doctype html>
+<title>SPARQL Query</title>
+<body>
+    <h1>SPARQL Query</h1>
+    
+    <form name="query-form" action="" method="post"> <!--enctype="multipart/form-data">
+        <input type=file name="data" required -->
+        
+        <select name="file" required>
+            <option value="">Select a file</option>
+            {% for f in filenames %}
+            <option value="{{f}}" {% if f == last %}selected{% endif %}>{{f}}</option>
+            {% endfor %}
+        </select>
+        
+        <div>
+            <textarea name="query" rows=8 cols=60 placeholder="Write your SPARQL query here..." required>{{query_text}}</textarea>
+        </div>
+        <input type=submit method=POST>
+    </form>
+    {% if answers|length > 0 %}
+        <table border="1">
+          <tr>
+            {% for v in variables %}
+              <th>{{v}}</th>
+            {% endfor %}
+          </tr>
+          
+          {% for a in answers %}
+          <tr>
+            {% for col in a %}
+              <td>{{col}}</td>
+            {% endfor %}
+          </tr>
+          {% endfor %}
+        </table>
+    {% endif %}
+</body>
+
