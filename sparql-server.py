@@ -27,12 +27,14 @@ def home():
         last = request.form['file']
         query_text = request.form['query']
         g.parse('data/'+last)
+        tupl = None
         for tupl in g.query(query_text):
             a = []
             for k in tupl.asdict():
                 a += [shorten_iri(tupl[k],g.namespaces())]
             ans += [a]
-        vrbs = tupl.asdict().keys()
+        if tupl:
+            vrbs = tupl.asdict().keys()
     print(len(ans))
     return render_template('home.html', answers=ans, last=last,
         filenames=filenames, query_text=query_text, 
