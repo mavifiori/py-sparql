@@ -11,7 +11,7 @@ def shorten_iri(iri, namespaces):
             r = str(escape(r.replace(uri,pref+':')))
             break    
     if len(r)>30:
-        r = r[:27]+'...'
+        r = r[:11]+'...'+r[-15:]
     return r
 
 @app.route('/', methods=['GET','POST'])
