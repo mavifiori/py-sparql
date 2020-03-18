@@ -18,22 +18,30 @@
         </div>
         <input type=submit method=POST>
     </form>
-    {% if answers|length > 0 %}
-        <table border="1">
-          <tr>
-            {% for v in variables %}
-              <th>{{v}}</th>
+    <div style="font-family:monospace">
+        {% if answers|length > 0 %}
+            <table border="1">
+              <tr>
+                {% for v in variables %}
+                  <th>{{v}}</th>
+                {% endfor %}
+              </tr>
+              
+              {% for a in answers %}
+              <tr>
+                {% for col in a %}
+                  <td>{{col}}</td>
+                {% endfor %}
+              </tr>
+              {% endfor %}
+            </table>
+        {% endif %}
+        
+        {% if triples|length > 0 %}
+            {% for s,p,o in triples %}
+                {{s}} {{p}} {{o}} <br>
             {% endfor %}
-          </tr>
-          
-          {% for a in answers %}
-          <tr>
-            {% for col in a %}
-              <td>{{col}}</td>
-            {% endfor %}
-          </tr>
-          {% endfor %}
-        </table>
-    {% endif %}
+        {% endif %}
+    </div>
 </body>
 

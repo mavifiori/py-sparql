@@ -16,28 +16,34 @@ def shorten_iri(iri, namespaces):
 
 @app.route('/', methods=['GET','POST'])
 def home():
-    ans = []
-    filenames = os.listdir('data')
-    last = ''
+    filenames = os.listdir('data') # list of files in data directory
+    last = ''   # last data file chosen
     query_text = 'SELECT ?s ?p ?o\nWHERE {\n    ?s ?p ?o\n}\nLIMIT 100'
-    vrbs = None
+    ans = []    # answers for SELECT queries
+    tps = []    # triples for CONSTRUCT queries
+    vrbs = None # query variables
     
     if request.method == 'POST':
         g = rdflib.Graph()
         last = request.form['file']
         query_text = request.form['query']
-        g.parse('data/'+last)
+        f = 'data/'+last
+        g.parse(f, format=rdflib.util.guess_format(f))
         tupl = None
-        for tupl in g.query(query_text):
-            a = []
-            for k in tupl.asdict():
-                a += [shorten_iri(tupl[k],g.namespaces())]
-            ans += [a]
-        if tupl:
-            vrbs = tupl.asdict().keys()
-    print(len(ans))
+        q = g.query(query_text)
+        if q.type == 'SELECT':
+            for tupl in q:
+                a = []
+                for k in tupl.asdict():
+                    a += [shorten_iri(tupl[k],g.namespaces())]
+                ans += [a]
+            vrbs = q.vars
+        elif q.type == 'CONSTRUCT':
+            for t in q:
+                t = tuple([shorten_iri(x, g.namespaces()) for x in t])
+                tps += [t]
     return render_template('home.html', answers=ans, last=last,
         filenames=filenames, query_text=query_text, 
-        variables=vrbs)
+        variables=vrbs, triples=tps)
 
 
