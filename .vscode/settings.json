@@ -1,0 +1,6 @@
+{
+    "python.analysis.extraPaths": [
+        "./site-packages",
+        "./site-packages/colorama"
+    ]
+}
